@@ -16,7 +16,7 @@ static uint32_t randState;
 static uint16_t randMul;
 static uint16_t randAcc;
 
-void srand(uint64_t);
+void seedrand(uint64_t);
 uint8_t randByte();
 
 

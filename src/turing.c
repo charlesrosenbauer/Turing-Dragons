@@ -1,5 +1,7 @@
 #include "turing.h"
 #include "funcs.h"
+#include "stdlib.h"
+#include "stdio.h"
 
 
 
@@ -30,8 +32,22 @@ void randomMachine(MACHINE* m, uint8_t cardct){
 
 
 
+void makeTape(TAPE* t, uint64_t size){
+  t->size = size;
+  t->tape = malloc((size / 8)+1);
+}
+
+
+
+
+
+
+
+
+
+
 void clearTape(TAPE* t){
-  for(int i = 0; i < t->size; i++)
+  for(int i = 0; i < (t->size/8); i++)
     t->tape[i] = 0;
 }
 
@@ -44,6 +60,11 @@ void clearTape(TAPE* t){
 
 
 TERMCODE runMachine(MACHINE* m, TAPE* t, int limit){
+
+  TERMCODE ret;
+  ret.termct = 0;
+  ret.maxIx  = 0;
+  ret.minIx  = t->size+1;
 
   int state = 0;
   for(int i = 0; i < limit; i++){
@@ -72,9 +93,18 @@ TERMCODE runMachine(MACHINE* m, TAPE* t, int limit){
       state = m->cards[state].goto0;
     }
 
-    if(state == m->cardct) return i;
+    if(state == m->cardct){
+      ret.termct = i;
+      return ret;
+    }
 
-    if((m->index < 0) || (m->index > (t->size * 8))) return -i;
+    if((m->index < 0) || (m->index >= t->size)){
+      ret.termct = -i;
+      return ret;
+    }
+
+    ret.maxIx = (ret.maxIx < m->index)? m->index : ret.maxIx;
+    ret.minIx = (ret.minIx > m->index)? m->index : ret.minIx;
   }
-  return 0;
+  return ret;
 }

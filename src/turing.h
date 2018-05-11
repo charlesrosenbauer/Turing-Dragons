@@ -13,7 +13,11 @@
 
 
 
-typedef int64_t TERMCODE;
+typedef struct{
+   int64_t termct;
+  uint64_t maxIx;
+  uint64_t minIx;
+}TERMCODE;
 
 
 typedef struct{
@@ -49,6 +53,7 @@ typedef struct{
 
 
 void randomMachine(MACHINE*, uint8_t);
+void makeTape (TAPE*, uint64_t);
 void clearTape(TAPE*);
 TERMCODE runMachine(MACHINE*, TAPE*, int);
 
