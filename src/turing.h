@@ -41,7 +41,7 @@ typedef struct{
   CARD cards[255];  // 255 cards is the limit for now.
   uint8_t cardct;
   uint64_t index;
-}MACHINE;
+}MACHINE_2S;    // Turing Machine with 2 Symbols - Not actually Universal as far as I'm aware.
 
 
 
@@ -52,10 +52,10 @@ typedef struct{
 
 
 
-void randomMachine(MACHINE*, uint8_t);
+void randomMachine_2S(MACHINE_2s*, uint8_t);
 void makeTape (TAPE*, uint64_t);
 void clearTape(TAPE*);
-TERMCODE runMachine(MACHINE*, TAPE*, int);
+TERMCODE runMACHINE_2s(MACHINE_2s*, TAPE*, int);
 
 
 

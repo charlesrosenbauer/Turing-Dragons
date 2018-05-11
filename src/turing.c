@@ -12,7 +12,7 @@
 
 
 
-void randomMachine(MACHINE* m, uint8_t cardct){
+void randomMachine_2s(MACHINE_2s* m, uint8_t cardct){
   for(int i = 0; i < cardct; i++){
     m->cards[i].code0 = randByte() % 4;
     m->cards[i].goto0 = randByte() % cardct+1;
@@ -59,7 +59,7 @@ void clearTape(TAPE* t){
 
 
 
-TERMCODE runMachine(MACHINE* m, TAPE* t, int limit){
+TERMCODE runMachine_2S(MACHINE_2S* m, TAPE* t, int limit){
 
   TERMCODE ret;
   ret.termct = 0;

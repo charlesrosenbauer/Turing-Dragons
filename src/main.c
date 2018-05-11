@@ -19,7 +19,7 @@ int main(){
 
   TAPE t;
   makeTape(&t, 16777216);
-  MACHINE m;
+  MACHINE_2s m;
 
   float terms = 0;
   float termxs[TRIAL_CT];
@@ -33,10 +33,10 @@ int main(){
 
   for(int i = 0; i < TRIAL_CT; i++){
     clearTape(&t);
-    randomMachine(&m, 12);
+    randomMachine_2s(&m, 96);
     m.index = 8388608;
 
-    TERMCODE term = runMachine(&m, &t, 50000000);
+    TERMCODE term = runMachine_2s(&m, &t, 50000000);
 
     if(term.termct == 0){
       loopct++;
