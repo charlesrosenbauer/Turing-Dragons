@@ -34,11 +34,11 @@ typedef struct{
   // If 1
   uint8_t code1;
   uint8_t goto1;
-}CARD;
+}CARD_2S;
 
 
 typedef struct{
-  CARD cards[255];  // 255 cards is the limit for now.
+  CARD_2S cards[255];  // 255 cards is the limit for now.
   uint8_t cardct;
   uint64_t index;
 }MACHINE_2S;    // Turing Machine with 2 Symbols - Not actually Universal as far as I'm aware.
@@ -52,10 +52,43 @@ typedef struct{
 
 
 
-void randomMachine_2S(MACHINE_2s*, uint8_t);
+typedef struct{
+  // If 0
+  uint8_t code0;
+  uint8_t goto0;
+
+  // If 1
+  uint8_t code1;
+  uint8_t goto1;
+
+  // If 2
+  uint8_t code2;
+  uint8_t goto2;
+}CARD_3S;
+
+
+typedef struct{
+  CARD_3S cards[255];  // 255 cards is the limit for now.
+  uint8_t cardct;
+  uint64_t index;
+}MACHINE_3S;
+
+
+
+
+
+
+
+
+
+
 void makeTape (TAPE*, uint64_t);
 void clearTape(TAPE*);
-TERMCODE runMACHINE_2s(MACHINE_2s*, TAPE*, int);
+void  randomMachine_2S(MACHINE_2S*, uint8_t);
+TERMCODE runMachine_2S(MACHINE_2S*, TAPE*, int);
+
+void  randomMachine_3S(MACHINE_3S*, uint8_t);
+TERMCODE runMachine_3S(MACHINE_3S*, TAPE*, int);
 
 
 

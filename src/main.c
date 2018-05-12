@@ -18,8 +18,8 @@ int main(){
   seedrand(0x13F2E2C1279AE429);
 
   TAPE t;
-  makeTape(&t, 16777216);
-  MACHINE_2s m;
+  makeTape(&t, 2097152);
+  MACHINE_3S m;
 
   float terms = 0;
   float termxs[TRIAL_CT];
@@ -33,10 +33,10 @@ int main(){
 
   for(int i = 0; i < TRIAL_CT; i++){
     clearTape(&t);
-    randomMachine_2s(&m, 96);
-    m.index = 8388608;
+    randomMachine_3S(&m, 255);
+    m.index = 8388608 / 2;
 
-    TERMCODE term = runMachine_2s(&m, &t, 50000000);
+    TERMCODE term = runMachine_3S(&m, &t, 50000000);
 
     if(term.termct == 0){
       loopct++;
