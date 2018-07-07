@@ -26,10 +26,18 @@ void getPos(uint16_t* x, uint16_t* y, PROGRAM* p){
       b ^=  p->code[i] & m0;
     }
   }*/
+
+  /*
   a = ((p->code[0] & 0x0F) <<  8) |  (p->code[1] & 0x0F);
   b = ((p->code[2] & 0x0F) <<  8) |  (p->code[3] & 0x0F);
   a |=((p->code[4] & 0x0F) << 12) | ((p->code[5] & 0x0F) << 4);
   b |=((p->code[6] & 0x0F) << 12) | ((p->code[7] & 0x0F) << 4);
+  */
+
+  for(int i = 0; i < p->length; i++){
+    a |= 1 << (p->code[i] & 0x0F);
+    b |= 1 << (p->code[i] >>   4);
+  }
   *x = a;
   *y = b;
 }
