@@ -45,9 +45,10 @@ typedef struct{
   Programs can be 8 or 16-bit.
   inputs and outputs are just the first/last 4 values put into their belts.
 */
+static const int IOSIZE = 4096;
 typedef struct{
-  uint64_t inputs [1024];
-  uint64_t outputs[1024];
+  uint64_t inputs [IOSIZE];
+  uint64_t outputs[IOSIZE];
 }IOSPACE;
 
 

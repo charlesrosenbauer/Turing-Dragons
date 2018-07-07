@@ -12,9 +12,9 @@
 
 
 void runProgram(PROGRAM* p, IOSPACE* io, BITMODE b){
-  for(int i = 0; i < 1024; i++){
+  for(int i = 0; i < IOSIZE; i++){
     if(b == MODE8){
-      uint8_t belt [40];
+      uint8_t belt [64];
       int ip = 0;
       int bp = 3;
 
@@ -45,14 +45,14 @@ void runProgram(PROGRAM* p, IOSPACE* io, BITMODE b){
           case 11: belt[bp+1] = belt[bp-a] <  belt[bp-b]; break;
           case 12: belt[bp+1] = belt[bp-a] *  belt[bp-b]; break;
           case 13: belt[bp+1] = belt[bp-a] & ~belt[bp-b]; break;
-          case 14: bp += imm; break;
-          case 15: bp += (belt[bp-a])? belt[bp-b]: 0; break;
+          case 14: ip += imm; break;
+          case 15: ip += (belt[bp-a])? belt[bp-b]: 0; break;
         }
         bp++;
         ip++;
       }
 
-      if(bp > 40) bp = 40;
+      if(bp >= 64) bp = 63;
 
       io->outputs[i] = 0;
       io->outputs[i] |= ((uint64_t)belt[bp-3]) << 24;
@@ -61,7 +61,7 @@ void runProgram(PROGRAM* p, IOSPACE* io, BITMODE b){
       io->outputs[i] |= ((uint64_t)belt[bp  ]);
 
     }else{
-      uint16_t belt [40];
+      uint16_t belt [64];
       int ip = 0;
       int bp = 3;
 
@@ -92,14 +92,14 @@ void runProgram(PROGRAM* p, IOSPACE* io, BITMODE b){
           case 11: belt[bp+1] = belt[bp-a] <  belt[bp-b]; break;
           case 12: belt[bp+1] = belt[bp-a] *  belt[bp-b]; break;
           case 13: belt[bp+1] = belt[bp-a] & ~belt[bp-b]; break;
-          case 14: bp += imm; break;
-          case 15: bp += (belt[bp-a])? belt[bp-b]: 0; break;
+          case 14: ip += imm; break;
+          case 15: ip += (belt[bp-a])? belt[bp-b]: 0; break;
         }
         bp++;
         ip++;
       }
 
-      if(bp > 40) bp = 40;
+      if(bp >= 64) bp = 63;
 
       io->outputs[i] = 0;
       io->outputs[i] |= ((uint64_t)belt[bp-3]) << 24;
@@ -159,6 +159,40 @@ void printProgram(PROGRAM* p){
 
 
 
+int cmpProgram(PROGRAM* p, IOSPACE* io, BITMODE b){
+  IOSPACE x;
+  for(int i = 0; i < IOSIZE; i++){
+    x.inputs[i] = io->inputs[i];
+  }
+  runProgram(p, &x, b);
+
+  uint64_t distance = 0;
+  for(int i = 0; i < IOSIZE; i++){
+    uint64_t bitdiff = x.outputs[i] ^ io->outputs[i];
+
+    const uint64_t m1  = 0x5555555555555555;
+    const uint64_t m2  = 0x3333333333333333;
+    const uint64_t m4  = 0x0f0f0f0f0f0f0f0f;
+    const uint64_t h01 = 0x0101010101010101;
+
+    bitdiff -= (bitdiff >> 1) & m1;
+    bitdiff = (bitdiff & m2) + ((bitdiff >> 2) & m2);
+    bitdiff = (bitdiff + (bitdiff >> 4)) & m4;
+    distance += (bitdiff * h01) >> 56;
+  }
+
+  return distance / IOSIZE;
+}
+
+
+
+
+
+
+
+
+
+
 void formatInt(char* c, int x){
   c[7] = '\0';
   if(x == 0){
@@ -189,26 +223,34 @@ void formatInt(char* c, int x){
 
 void printIOSpace(IOSPACE* io, BITMODE b){
   if(b == MODE8){
-    for(int i = 0; i < 1024; i++){
-      char a[8], b[8], c[8], d[8], is[8];
-      formatInt(a, (io->outputs[i]      ) & 0xFF);
-      formatInt(b, (io->outputs[i] >>  8) & 0xFF);
-      formatInt(c, (io->outputs[i] >> 16) & 0xFF);
-      formatInt(d, (io->outputs[i] >> 24) & 0xFF);
-      formatInt(is,i);
-      printf("|%s>%s,%s,%s,%s|", is, a, b, c, d);
-      if(i % 6 == 5) printf("\n");
+    for(int i = 0; i < IOSIZE; i++){
+      char pa[8], pb[8], pc[8], pd[8];
+      char ra[8], rb[8], rc[8], rd[8];
+      formatInt(ra, (io->outputs[i]      ) & 0xFF);
+      formatInt(rb, (io->outputs[i] >>  8) & 0xFF);
+      formatInt(rc, (io->outputs[i] >> 16) & 0xFF);
+      formatInt(rd, (io->outputs[i] >> 24) & 0xFF);
+      formatInt(pa, (io->inputs [i]      ) & 0xFF);
+      formatInt(pb, (io->inputs [i] >>  8) & 0xFF);
+      formatInt(pc, (io->inputs [i] >> 16) & 0xFF);
+      formatInt(pd, (io->inputs [i] >> 24) & 0xFF);
+      printf("|%s,%s,%s,%s>%s,%s,%s,%s|", pa, pb, pc, pd, ra, rb, rc, rd);
+      if(i % 4 == 3) printf("\n");
     }
   }else{
-    for(int i = 0; i < 1024; i++){
-      char a[8], b[8], c[8], d[8], is[8];
-      formatInt(a, (io->outputs[i]      ) & 0xFFFF);
-      formatInt(b, (io->outputs[i] >> 16) & 0xFFFF);
-      formatInt(c, (io->outputs[i] >> 32) & 0xFFFF);
-      formatInt(d, (io->outputs[i] >> 48) & 0xFFFF);
-      formatInt(is,i);
-      printf("|%s>%s,%s,%s,%s|", is, a, b, c, d);
-      if(i % 6 == 5) printf("\n");
+    for(int i = 0; i < IOSIZE; i++){
+      char pa[8], pb[8], pc[8], pd[8];
+      char ra[8], rb[8], rc[8], rd[8];
+      formatInt(ra, (io->outputs[i]      ) & 0xFFFF);
+      formatInt(rb, (io->outputs[i] >> 16) & 0xFFFF);
+      formatInt(rc, (io->outputs[i] >> 32) & 0xFFFF);
+      formatInt(rd, (io->outputs[i] >> 48) & 0xFFFF);
+      formatInt(pa, (io->inputs [i]      ) & 0xFFFF);
+      formatInt(pb, (io->inputs [i] >> 16) & 0xFFFF);
+      formatInt(pc, (io->inputs [i] >> 32) & 0xFFFF);
+      formatInt(pd, (io->inputs [i] >> 48) & 0xFFFF);
+      printf("|%s,%s,%s,%s>%s,%s,%s,%s|", pa, pb, pc, pd, ra, rb, rc, rd);
+      if(i % 4 == 3) printf("\n");
     }
   }
 }
