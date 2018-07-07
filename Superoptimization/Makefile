@@ -1,3 +1,2 @@
 all:
-	clang -lSDL src/*.c -o bin/superopt
-	
+	clang -O3 -lSDL src/*.c -o bin/superopt
