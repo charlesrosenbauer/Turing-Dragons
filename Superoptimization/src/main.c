@@ -3,56 +3,7 @@
 #include "stdint.h"
 #include "draw.h"
 #include "SDL/SDL.h"
-
-
-
-
-
-
-
-
-
-
-long rseed = 3156937611;
-
-uint8_t rnum(){
-  rseed = (rseed * 123571389)  + 1385179671;
-  rseed ^= 1146146141641714;
-  return (rseed / 256) % 256;
-}
-
-
-
-
-
-
-
-
-
-
-uint64_t rpar(){
-  uint64_t x = 0;
-  for(int i = 0; i < 8; i++){
-    x |= rnum(); x <<= 8;
-  }
-  return x;
-}
-
-
-
-
-
-
-
-
-
-
-void newProgram(PROGRAM* p, int minsz, int maxsz){
-  for(int j = 0; j < 32; j++)
-    p->code[j] = rnum();
-  p->length = rnum() % maxsz;
-  p->length = (p->length > minsz)? p->length : minsz;
-}
+#include "util.h"
 
 
 
@@ -81,8 +32,8 @@ int main(){
   int isBadFunc = 1;
   int badct = 0;
   while(isBadFunc){
-    newProgram(&p, 10, 14);
-    runProgram(&p, &io, MODE16);
+    newProgram(&p, 14, 20);
+    runProgram(&p, &io, MODE8);
 
     int hashCt[IOSIZE];
     for(int i = 0; i < IOSIZE; i++)
@@ -131,9 +82,9 @@ int main(){
 
     // Random 16-op program
     PROGRAM pnew;
-    newProgram(&pnew, 6, 8);
+    newProgram(&pnew, 1, 8);
 
-    int n = 64 - cmpProgram(&pnew, &io, MODE16);
+    int n = 64 - cmpProgram(&pnew, &io, MODE8);
     if(n > mn){
       mn = n;
       mi = i;

@@ -1,6 +1,7 @@
 #include "interpreter.h"
 #include "stdio.h"
 #include "string.h"
+#include "util.h"
 
 
 
@@ -253,4 +254,20 @@ void printIOSpace(IOSPACE* io, BITMODE b){
       if(i % 4 == 3) printf("\n");
     }
   }
+}
+
+
+
+
+
+
+
+
+
+
+void newProgram(PROGRAM* p, int minsz, int maxsz){
+  for(int j = 0; j < 32; j++)
+    p->code[j] = rnum();
+  p->length = rnum() % maxsz;
+  p->length = (p->length > minsz)? p->length : minsz;
 }

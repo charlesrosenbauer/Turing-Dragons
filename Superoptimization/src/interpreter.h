@@ -78,6 +78,7 @@ void runProgram(PROGRAM*, IOSPACE*, BITMODE);
 int  cmpProgram(PROGRAM*, IOSPACE*, BITMODE);
 void printProgram(PROGRAM*);
 void printIOSpace(IOSPACE*, BITMODE);
+void newProgram(PROGRAM*, int, int);
 
 
 #endif
