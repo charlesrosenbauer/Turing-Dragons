@@ -32,7 +32,7 @@ int main(){
   int isBadFunc = 1;
   int badct = 0;
   while(isBadFunc){
-    newProgram(&p, 14, 20);
+    newProgram(&p, 7, 10);
     runProgram(&p, &io, MODE8);
 
     int hashCt[IOSIZE];
