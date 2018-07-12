@@ -32,7 +32,11 @@ typedef struct{
 
 
 
-void generateTable2P(uint64_t(uint64_t, uint64_t));
-void generateTable2P(uint64_t(uint64_t, uint64_t, uint64_t));
+void generateTable2P (uint64_t(uint64_t, uint64_t));
+void generateTable3P (uint64_t(uint64_t, uint64_t, uint64_t));
+int getSubspace      (uint64_t);
+uint64_t makeSubspace(uint64_t, int);
+
+
 
 #endif
