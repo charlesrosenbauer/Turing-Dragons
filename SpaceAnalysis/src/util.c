@@ -24,8 +24,11 @@ uint8_t rnum(){
 
 
 uint64_t rnum8(){
+  uint64_t ret = 0;
+
   rstate = (rstate * 3178956978153) + 65718936781;
-  uint64_t ret = (rstate >> 8) & 0xFFFF;
+  ret = (rstate >> 8) & 0xFFFF;
+
   rstate = (rstate * 1537697165781) + 70873891123;
   ret <<= 16;
   ret |= (rstate >> 8) & 0xFFFF;

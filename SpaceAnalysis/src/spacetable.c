@@ -1,4 +1,5 @@
 #include "spacetable.h"
+#include "stdlib.h"
 #include "util.h"
 
 
@@ -44,4 +45,35 @@ uint64_t makeSubspace(uint64_t rval, int space){
   mk |= (space & 0x2)? m2 : 0;
   mk |= (space & 0x1)? m3 : 0;
   return rval & mk;
+}
+
+
+
+
+
+
+
+
+
+
+SPACETABLE_2P* generateTable2P(uint64_t(*f)(uint64_t, uint64_t)){
+  SPACETABLE_2P* rettable = malloc(sizeof(SPACETABLE_2P));
+
+  for(int i = 0; i < TABLEDIM; i++){
+    for(int j = 0; j < TABLEDIM; j++){
+
+      rettable->elems[i][j] = 0;
+
+      for(int k = 0; k < 128; k++){
+        uint64_t a = makeSubspace(rnum8(), i);
+        uint64_t b = makeSubspace(rnum8(), j);
+
+        uint64_t q = f(a, b);
+
+        rettable->elems[i][j] |= (1 << getSubspace(q));
+      }
+    }
+  }
+
+  return rettable;
 }
