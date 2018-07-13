@@ -148,7 +148,104 @@ SPACETABLE_3P* generateTable3P(uint64_t(*f)(uint64_t, uint64_t, uint64_t)){
 
 
 
+
+uint64_t addu64(uint64_t a, uint64_t b){
+  return a + b;
+}
+
+uint64_t subu64(uint64_t a, uint64_t b){
+  return a - b;
+}
+
+uint64_t mulu64(uint64_t a, uint64_t b){
+  return a * b;
+}
+
+uint64_t divu64(uint64_t a, uint64_t b){
+  return (b != 0)? a / b : 0;
+}
+
+uint64_t modu64(uint64_t a, uint64_t b){
+  return (b != 0)? a % b : 0;
+}
+
+uint64_t xoru64(uint64_t a, uint64_t b){
+  return a ^ b;
+}
+
+uint64_t andu64(uint64_t a, uint64_t b){
+  return a & b;
+}
+
+uint64_t oru64(uint64_t a, uint64_t b){
+  return a | b;
+}
+
+uint64_t shlu64(uint64_t a, uint64_t b){
+  return a << b;
+}
+
+uint64_t shru64(uint64_t a, uint64_t b){
+  return a >> b;
+}
+
+uint64_t lsu64(uint64_t a, uint64_t b){
+  return a < b;
+}
+
+uint64_t gtu64(uint64_t a, uint64_t b){
+  return a > b;
+}
+
+uint64_t neu64(uint64_t a, uint64_t b){
+  return a != b;
+}
+
+uint64_t andnzu64(uint64_t a, uint64_t b){
+  return (a & b) != 0;
+}
+
+uint64_t msiu64(uint64_t a, uint64_t b){
+  return a & (b - a);
+}
+
+uint64_t andnu64(uint64_t a, uint64_t b){
+  return a & ~b;
+}
+
+
+
+
+
+
+
+
+
+
+uint64_t incu64(uint64_t a){
+  return a++;
+}
+
+uint64_t decu64(uint64_t a){
+  return a--;
+}
+
+uint64_t notu64(uint64_t a){
+  return ~a;
+}
+
+uint64_t nzu64(uint64_t a){
+  return a != 0;
+}
+
+
+
+
+
+
+
 /*
 SPACETABLE_ISA* generateTableISA(){
 
-}*/
+}
+*/
