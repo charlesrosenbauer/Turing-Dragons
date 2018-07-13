@@ -15,6 +15,11 @@
 
 static const int TABLEDIM = 16;
 typedef uint16_t TABLEELEM;
+
+typedef struct{
+  TABLEELEM elems [TABLEDIM];
+}SPACETABLE_1P;
+
 typedef struct{
   TABLEELEM elems [TABLEDIM][TABLEDIM];
 }SPACETABLE_2P;
@@ -32,8 +37,27 @@ typedef struct{
 
 
 
-SPACETABLE_2P* generateTable2P (uint64_t(uint64_t, uint64_t));
-SPACETABLE_3P* generateTable3P (uint64_t(uint64_t, uint64_t, uint64_t));
+typedef struct{
+  SPACETABLE_1P*   unops;
+  SPACETABLE_2P*  binops;
+  SPACETABLE_3P* trinops;
+
+  int bs, ts;
+}SPACETABLE_ISA;
+
+
+
+
+
+
+
+
+
+
+SPACETABLE_1P*  generateTable1P (uint64_t(uint64_t));
+SPACETABLE_2P*  generateTable2P (uint64_t(uint64_t, uint64_t));
+SPACETABLE_3P*  generateTable3P (uint64_t(uint64_t, uint64_t, uint64_t));
+SPACETABLE_ISA* generateTableISA();
 int getSubspace      (uint64_t);
 uint64_t makeSubspace(uint64_t, int);
 

@@ -56,6 +56,34 @@ uint64_t makeSubspace(uint64_t rval, int space){
 
 
 
+SPACETABLE_1P* generateTable1P(uint64_t(*f)(uint64_t)){
+  SPACETABLE_1P* rettable = malloc(sizeof(SPACETABLE_1P));
+
+  for(int i = 0; i < TABLEDIM; i++){
+
+    rettable->elems[i] = 0;
+
+    for(int j = 0; j < 128; j++){
+      uint64_t a = makeSubspace(rnum8(), i);
+
+      uint64_t q = f(a);
+
+      rettable->elems[i] |= (1 << getSubspace(q));
+    }
+  }
+
+  return rettable;
+}
+
+
+
+
+
+
+
+
+
+
 SPACETABLE_2P* generateTable2P(uint64_t(*f)(uint64_t, uint64_t)){
   SPACETABLE_2P* rettable = malloc(sizeof(SPACETABLE_2P));
 
@@ -77,3 +105,50 @@ SPACETABLE_2P* generateTable2P(uint64_t(*f)(uint64_t, uint64_t)){
 
   return rettable;
 }
+
+
+
+
+
+
+
+
+
+
+SPACETABLE_3P* generateTable3P(uint64_t(*f)(uint64_t, uint64_t, uint64_t)){
+  SPACETABLE_3P* rettable = malloc(sizeof(SPACETABLE_3P));
+
+  for(int i = 0; i < TABLEDIM; i++){
+    for(int j = 0; j < TABLEDIM; j++){
+      for(int k = 0; k < TABLEDIM; k++){
+
+        rettable->elems[i][j][k] = 0;
+
+        for(int l = 0; l < 128; l++){
+          uint64_t a = makeSubspace(rnum8(), i);
+          uint64_t b = makeSubspace(rnum8(), j);
+          uint64_t c = makeSubspace(rnum8(), k);
+
+          uint64_t q = f(a, b, c);
+
+          rettable->elems[i][j][k] |= (1 << getSubspace(q));
+        }
+      }
+    }
+  }
+
+  return rettable;
+}
+
+
+
+
+
+
+
+
+
+/*
+SPACETABLE_ISA* generateTableISA(){
+
+}*/
