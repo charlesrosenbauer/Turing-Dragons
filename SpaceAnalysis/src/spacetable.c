@@ -1,6 +1,7 @@
 #include "spacetable.h"
 #include "stdlib.h"
 #include "util.h"
+#include "stdio.h"
 
 
 
@@ -249,3 +250,73 @@ SPACETABLE_ISA* generateTableISA(){
 
 }
 */
+
+
+
+
+
+
+
+
+
+
+void printTable_1P(SPACETABLE_1P* table){
+  for(int i = 0; i < TABLEDIM; i++){
+    char numtext[64];
+    for(int j = 0; j < sizeof(TABLEELEM) * 8; j++)
+      numtext[j] = ((1 << j) & table->elems[i])? '1' : '0';
+    numtext[sizeof(TABLEELEM) * 8] = '\0';
+
+    printf("%s ", numtext);
+  }
+  printf("\n");
+}
+
+
+
+
+
+
+
+
+
+
+void printTable_2P(SPACETABLE_2P* table){
+  for(int i = 0; i < TABLEDIM; i++){
+    for(int j = 0; j < TABLEDIM; j++){
+      char numtext[64];
+      for(int k = 0; k < sizeof(TABLEELEM) * 8; j++)
+        numtext[k] = ((1 << k) & table->elems[i][j])? '1' : '0';
+      numtext[sizeof(TABLEELEM) * 8] = '\0';
+
+      printf("%s ", numtext);
+    }
+    printf("\n");
+  }
+}
+
+
+
+
+
+
+
+
+
+
+void printTable_3P(SPACETABLE_3P* table){
+  for(int i = 0; i < TABLEDIM; i++){
+    for(int j = 0; j < TABLEDIM; j++){
+      for(int k = 0; k < TABLEDIM; k++){
+        char numtext[64];
+        for(int l = 0; l < sizeof(TABLEELEM) * 8; j++)
+          numtext[l] = ((1 << l) & table->elems[i][j][k])? '1' : '0';
+        numtext[sizeof(TABLEELEM) * 8] = '\0';
+
+        printf("%s ", numtext);
+      }
+      printf("\n");
+    }
+    printf("\n");
+  }
+}

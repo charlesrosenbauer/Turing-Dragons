@@ -61,6 +61,9 @@ SPACETABLE_ISA* generateTableISA();
 int getSubspace      (uint64_t);
 uint64_t makeSubspace(uint64_t, int);
 
+void printTable_1P(SPACETABLE_1P*);
+void printTable_2P(SPACETABLE_2P*);
+void printTable_3P(SPACETABLE_3P*);
 
 
 #endif
