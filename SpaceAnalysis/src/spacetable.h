@@ -42,7 +42,7 @@ typedef struct{
   SPACETABLE_2P*  binops;
   SPACETABLE_3P* trinops;
 
-  int bs, ts;
+  int us, bs, ts;
 }SPACETABLE_ISA;
 
 

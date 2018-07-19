@@ -245,11 +245,42 @@ uint64_t nzu64(uint64_t a){
 
 
 
-/*
-SPACETABLE_ISA* generateTableISA(){
 
+SPACETABLE_ISA* generateTableISA(){
+  SPACETABLE_ISA* ret = malloc(sizeof(SPACETABLE_ISA));
+  ret->unops  = malloc(sizeof(SPACETABLE_1P) *  4);
+  ret->binops = malloc(sizeof(SPACETABLE_2P) * 16);
+  ret->trinops= malloc(sizeof(SPACETABLE_3P) *  1);
+
+  ret->us = 4;
+  ret->bs = 16;
+  ret->ts = 0;
+
+  ret->binops[ 0] = *generateTable2P(addu64);
+  ret->binops[ 1] = *generateTable2P(subu64);
+  ret->binops[ 2] = *generateTable2P(mulu64);
+  ret->binops[ 3] = *generateTable2P(divu64);
+  ret->binops[ 4] = *generateTable2P(modu64);
+  ret->binops[ 5] = *generateTable2P(xoru64);
+  ret->binops[ 6] = *generateTable2P(oru64 );
+  ret->binops[ 7] = *generateTable2P(andu64);
+  ret->binops[ 8] = *generateTable2P(shlu64);
+  ret->binops[ 9] = *generateTable2P(shru64);
+  ret->binops[10] = *generateTable2P(lsu64);
+  ret->binops[11] = *generateTable2P(gtu64);
+  ret->binops[12] = *generateTable2P(neu64);
+  ret->binops[13] = *generateTable2P(andnzu64);
+  ret->binops[14] = *generateTable2P(msiu64);
+  ret->binops[15] = *generateTable2P(andnu64);
+
+  ret->  unops[0] = *generateTable1P(incu64);
+  ret->  unops[1] = *generateTable1P(decu64);
+  ret->  unops[2] = *generateTable1P(notu64);
+  ret->  unops[3] = *generateTable1P(nzu64);
+
+  return ret;
 }
-*/
+
 
 
 
