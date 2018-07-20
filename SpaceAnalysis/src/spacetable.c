@@ -64,7 +64,7 @@ SPACETABLE_1P* generateTable1P(uint64_t(*f)(uint64_t)){
 
     rettable->elems[i] = 0;
 
-    for(int j = 0; j < 128; j++){
+    for(int j = 0; j < 256; j++){
       uint64_t a = makeSubspace(rnum8(), i);
 
       uint64_t q = f(a);
@@ -93,7 +93,7 @@ SPACETABLE_2P* generateTable2P(uint64_t(*f)(uint64_t, uint64_t)){
 
       rettable->elems[i][j] = 0;
 
-      for(int k = 0; k < 128; k++){
+      for(int k = 0; k < 256; k++){
         uint64_t a = makeSubspace(rnum8(), i);
         uint64_t b = makeSubspace(rnum8(), j);
 
@@ -125,7 +125,7 @@ SPACETABLE_3P* generateTable3P(uint64_t(*f)(uint64_t, uint64_t, uint64_t)){
 
         rettable->elems[i][j][k] = 0;
 
-        for(int l = 0; l < 128; l++){
+        for(int l = 0; l < 256; l++){
           uint64_t a = makeSubspace(rnum8(), i);
           uint64_t b = makeSubspace(rnum8(), j);
           uint64_t c = makeSubspace(rnum8(), k);
@@ -214,6 +214,34 @@ uint64_t andnu64(uint64_t a, uint64_t b){
   return a & ~b;
 }
 
+int64_t addi64(int64_t a, int64_t b){
+  return a + b;
+}
+
+int64_t subi64(int64_t a, int64_t b){
+  return a - b;
+}
+
+int64_t muli64(int64_t a, int64_t b){
+  return a * b;
+}
+
+int64_t divi64(int64_t a, int64_t b){
+  return (b != 0)? a / b : 0;
+}
+
+int64_t modi64(int64_t a, int64_t b){
+  return (b != 0)? a % b : 0;
+}
+
+int64_t lsi64(int64_t a, int64_t b){
+  return a < b;
+}
+
+int64_t gti64(int64_t a, int64_t b){
+  return a > b;
+}
+
 
 
 
@@ -249,11 +277,11 @@ uint64_t nzu64(uint64_t a){
 SPACETABLE_ISA* generateTableISA(){
   SPACETABLE_ISA* ret = malloc(sizeof(SPACETABLE_ISA));
   ret->unops  = malloc(sizeof(SPACETABLE_1P) *  4);
-  ret->binops = malloc(sizeof(SPACETABLE_2P) * 16);
+  ret->binops = malloc(sizeof(SPACETABLE_2P) * 23);
   ret->trinops= malloc(sizeof(SPACETABLE_3P) *  1);
 
   ret->us = 4;
-  ret->bs = 16;
+  ret->bs = 23;
   ret->ts = 0;
 
   ret->binops[ 0] = *generateTable2P(addu64);
@@ -272,6 +300,13 @@ SPACETABLE_ISA* generateTableISA(){
   ret->binops[13] = *generateTable2P(andnzu64);
   ret->binops[14] = *generateTable2P(msiu64);
   ret->binops[15] = *generateTable2P(andnu64);
+  ret->binops[16] = *generateTable2P(addi64);
+  ret->binops[17] = *generateTable2P(subi64);
+  ret->binops[18] = *generateTable2P(muli64);
+  ret->binops[19] = *generateTable2P(divi64);
+  ret->binops[20] = *generateTable2P(modi64);
+  ret->binops[21] = *generateTable2P(lsi64);
+  ret->binops[22] = *generateTable2P(gti64);
 
   ret->  unops[0] = *generateTable1P(incu64);
   ret->  unops[1] = *generateTable1P(decu64);
@@ -295,12 +330,11 @@ void printTable_1P(SPACETABLE_1P* table){
   for(int i = 0; i < TABLEDIM; i++){
     char numtext[64];
     for(int j = 0; j < sizeof(TABLEELEM) * 8; j++)
-      numtext[j] = ((1 << j) & table->elems[i])? '1' : '0';
+      numtext[j] = ((1 << j) & table->elems[i])? '#' : '_';
     numtext[sizeof(TABLEELEM) * 8] = '\0';
 
-    printf("%s ", numtext);
+    printf("%s\n", numtext);
   }
-  printf("\n");
 }
 
 
@@ -316,8 +350,8 @@ void printTable_2P(SPACETABLE_2P* table){
   for(int i = 0; i < TABLEDIM; i++){
     for(int j = 0; j < TABLEDIM; j++){
       char numtext[64];
-      for(int k = 0; k < sizeof(TABLEELEM) * 8; j++)
-        numtext[k] = ((1 << k) & table->elems[i][j])? '1' : '0';
+      for(int k = 0; k < sizeof(TABLEELEM) * 8; k++)
+        numtext[k] = ((1 << k) & table->elems[i][j])? '#' : '_';
       numtext[sizeof(TABLEELEM) * 8] = '\0';
 
       printf("%s ", numtext);
@@ -340,8 +374,8 @@ void printTable_3P(SPACETABLE_3P* table){
     for(int j = 0; j < TABLEDIM; j++){
       for(int k = 0; k < TABLEDIM; k++){
         char numtext[64];
-        for(int l = 0; l < sizeof(TABLEELEM) * 8; j++)
-          numtext[l] = ((1 << l) & table->elems[i][j][k])? '1' : '0';
+        for(int l = 0; l < sizeof(TABLEELEM) * 8; l++)
+          numtext[l] = ((1 << l) & table->elems[i][j][k])? '#' : '_';
         numtext[sizeof(TABLEELEM) * 8] = '\0';
 
         printf("%s ", numtext);
