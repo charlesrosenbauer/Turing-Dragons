@@ -120,6 +120,93 @@ void runProgram(PROGRAM* p, IOSPACE* io, BITMODE b){
 
 
 
+void runAdvProgram(ADVANCEDPROGRAM* p, IOSPACE* io, uint64_t outmask){
+  for(int i = 0; i < IOSIZE; i++){
+    uint16_t  belt [64];
+    int16_t* ibelt = (int16_t*) &belt;
+    int ip = 0;
+    int bp = 3;
+
+    belt[0] = (io->inputs[i]      ) & 0xFF;
+    belt[1] = (io->inputs[i] >>  8) & 0xFF;
+    belt[2] = (io->inputs[i] >> 16) & 0xFF;
+    belt[3] = (io->inputs[i] >> 24) & 0xFF;
+
+    while(ip < p->length){
+      uint16_t ins =  p->code[ip];
+      uint16_t op  =  ins >> 6;
+      uint16_t a   =  ins & 0x07;
+      uint16_t b   = (ins >> 3) & 0x07;
+      uint16_t imm =  ins & 0x3F;
+
+      uint16_t uba =  belt[bp-a];
+      uint16_t ubb =  belt[bp-b];
+      int16_t  iba = ibelt[bp-a];
+      int16_t  ibb = ibelt[bp-b];
+
+      switch(op){
+        case  0:  belt[bp+1] = uba + ubb; break;
+        case  1:  belt[bp+1] = uba - ubb; break;
+        case  2: ibelt[bp+1] = iba + ibb; break;
+        case  3: ibelt[bp+1] = iba - ibb; break;
+        case  4:  belt[bp+1] = uba + ubb + 1; break;
+        case  5:  belt[bp+1] = uba - ubb + 1; break;
+        case  6: ibelt[bp+1] = iba + ibb + 1; break;
+        case  7: ibelt[bp+1] = iba - ibb + 1; break;
+        case  8:  belt[bp+1] = uba & ubb; break;
+        case  9:  belt[bp+1] = uba |   ubb; break;
+        case 10:  belt[bp+1] = uba ^  ubb; break;
+        case 11:  belt[bp+1] = uba >> ubb; break;
+        case 12:  belt[bp+1] = uba << ubb; break;
+        case 13:  belt[bp+1] = (uba >> ubb) | (uba << (16 - ubb)); break;
+        case 14:  belt[bp+1] = (uba << ubb) | (uba >> (16 - ubb)); break;
+        case 15:  belt[bp+1] = imm;                       break;
+        case 16:  belt[bp+1] = uba != ubb; break;
+        case 17:  belt[bp+1] = ubb & (uba -  ubb); break;
+        case 18:  belt[bp+1] = uba > ubb; break;
+        case 19:  belt[bp+1] = uba < ubb; break;
+        case 20: ibelt[bp+1] = iba > ibb; break;
+        case 21: ibelt[bp+1] = iba < ibb; break;
+        case 22:  belt[bp+1] = uba * ubb; break;
+        case 23:  belt[bp+1] = iba * ibb; break;
+        case 24:  belt[bp+1] = (ubb != 0)? uba / ubb : 0; break;
+        case 25: ibelt[bp+1] = (ibb != 0)? iba / ibb : 0; break;
+        case 26:  belt[bp+1] = (ubb != 0)? uba % ubb : 0; break;
+        case 27: ibelt[bp+1] = (ibb != 0)? iba % ibb : 0; break;
+        case 28:  belt[bp+1] = uba & ~ubb; break;
+        case 29:  ip += imm; break;
+        case 30:  ip += (uba)? b : 0; break;
+
+        case 32:  belt[bp+1] = ~a; break;
+        case 33:  belt[bp+1] = a+1; break;
+        case 34:  belt[bp+1] = a-1; break;
+        case 35:  belt[bp+1] = (a < 0)? -a : a; break;
+      }
+      bp++;
+      ip++;
+    }
+
+    if(bp >= 64) bp = 63;
+
+    io->outputs[i] = 0;
+    io->outputs[i] |= ((uint64_t)belt[bp-3]) << 24;
+    io->outputs[i] |= ((uint64_t)belt[bp-2]) << 16;
+    io->outputs[i] |= ((uint64_t)belt[bp-1]) <<  8;
+    io->outputs[i] |= ((uint64_t)belt[bp  ]);
+
+    io->outputs[i] &= outmask;
+  }
+}
+
+
+
+
+
+
+
+
+
+
 void printProgram(PROGRAM* p){
 
   printf("PROGRAM:\n");

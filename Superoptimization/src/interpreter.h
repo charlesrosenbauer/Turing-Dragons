@@ -13,7 +13,8 @@
 
 
 
-typedef uint8_t BYTECODE;
+typedef uint8_t  BYTECODE;
+typedef uint16_t WORDCODE;
 
 
 
@@ -31,6 +32,20 @@ typedef struct{
   BYTECODE code [32];
   int length;
 }PROGRAM;
+
+
+
+
+
+
+
+
+
+
+typedef struct{
+  WORDCODE code [32];
+  int length;
+}ADVANCEDPROGRAM;
 
 
 
