@@ -95,5 +95,8 @@ void printProgram(PROGRAM*);
 void printIOSpace(IOSPACE*, BITMODE);
 void newProgram(PROGRAM*, int, int);
 
+void printAdvProgram(ADVANCEDPROGRAM*);
+void runAdvProgram  (ADVANCEDPROGRAM*, IOSPACE*, uint64_t);
+
 
 #endif

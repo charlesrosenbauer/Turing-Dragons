@@ -175,7 +175,7 @@ void runAdvProgram(ADVANCEDPROGRAM* p, IOSPACE* io, uint64_t outmask){
         case 27: ibelt[bp+1] = (ibb != 0)? iba % ibb : 0; break;
         case 28:  belt[bp+1] = uba & ~ubb; break;
         case 29:  ip += imm; break;
-        case 30:  ip += (uba)? b : 0; break;
+        case 30:  ip += (uba)? ibb : 0; break;
 
         case 32:  belt[bp+1] = ~a; break;
         case 33:  belt[bp+1] = a+1; break;
@@ -195,6 +195,65 @@ void runAdvProgram(ADVANCEDPROGRAM* p, IOSPACE* io, uint64_t outmask){
     io->outputs[i] |= ((uint64_t)belt[bp  ]);
 
     io->outputs[i] &= outmask;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+void printAdvProgram(ADVANCEDPROGRAM* p){
+  printf("PROGRAM:\n");
+  for(int i = 0; i < p->length; i++){
+    uint16_t ins =  p->code[i];
+    uint16_t op  =  ins >> 6;
+    uint16_t a   =  ins & 0x07;
+    uint16_t b   = (ins >> 3) & 0x07;
+    uint16_t imm =  ins & 0x3F;
+
+    switch(op){
+      case  0: printf("  uadd  b%i b%i\n", a, b); break;
+      case  1: printf("  usub  b%i b%i\n", a, b); break;
+      case  2: printf("  iadd  b%i b%i\n", a, b); break;
+      case  3: printf("  isub  b%i b%i\n", a, b); break;
+      case  4: printf("  uadc  b%i b%i\n", a, b); break;
+      case  5: printf("  usbc  b%i b%i\n", a, b); break;
+      case  6: printf("  iadc  b%i b%i\n", a, b); break;
+      case  7: printf("  isbc  b%i b%i\n", a, b); break;
+      case  8: printf("   and  b%i b%i\n", a, b); break;
+      case  9: printf("    or  b%i b%i\n", a, b); break;
+      case 10: printf("   xor  b%i b%i\n", a, b); break;
+      case 11: printf("   shr  b%i b%i\n", a, b); break;
+      case 12: printf("   shl  b%i b%i\n", a, b); break;
+      case 13: printf("   rtr  b%i b%i\n", a, b); break;
+      case 14: printf("   rtl  b%i b%i\n", a, b); break;
+      case 15: printf("   cst  #%i    \n", imm ); break;
+      case 16: printf("   neq  b%i b%i\n", a, b); break;
+      case 17: printf("  minc  b%i b%i\n", a, b); break;
+      case 18: printf("   ugt  b%i b%i\n", a, b); break;
+      case 19: printf("   uls  b%i b%i\n", a, b); break;
+      case 20: printf("   igt  b%i b%i\n", a, b); break;
+      case 21: printf("   ils  b%i b%i\n", a, b); break;
+      case 22: printf("  umul  b%i b%i\n", a, b); break;
+      case 23: printf("  imul  b%i b%i\n", a, b); break;
+      case 24: printf("  udiv  b%i b%i\n", a, b); break;
+      case 25: printf("  idiv  b%i b%i\n", a, b); break;
+      case 26: printf("  umod  b%i b%i\n", a, b); break;
+      case 27: printf("  imod  b%i b%i\n", a, b); break;
+      case 28: printf("  andn  b%i b%i\n", a, b); break;
+      case 29: printf("     j  #%i    \n", imm ); break;
+      case 30: printf("    br  b%i b%i\n", a, b); break;
+
+      case 32: printf("   not  b%i    \n", a   ); break;
+      case 33: printf("   inc  b%i    \n", a   ); break;
+      case 34: printf("   dec  b%i    \n", a   ); break;
+      case 35: printf("   abs  b%i    \n", a   ); break;
+    }
   }
 }
 
